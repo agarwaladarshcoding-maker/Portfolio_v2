@@ -81,6 +81,18 @@ export default function Work() {
                   >
                     Read the write-up
                   </Link>
+                  {/* A project you can actually open outranks one you can only
+                      read about, so the live link leads. */}
+                  {p.live && (
+                    <a
+                      href={p.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border border-amber px-4 py-2 font-mono text-micro uppercase text-amber transition-colors hover:bg-amber hover:text-ground"
+                    >
+                      Try it live ↗
+                    </a>
+                  )}
                   {p.github && (
                     <a
                       href={p.github}

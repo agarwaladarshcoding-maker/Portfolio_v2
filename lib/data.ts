@@ -74,9 +74,9 @@ export const evidence: Evidence[] = [
     kind: "source",
     claim: "Medical RAG, trust-aware",
     detail:
-      "Splits its own answer into atomic claims and labels each one SUPPORTED, WEAK, UNSUPPORTED or CONTRADICTED against the retrieved passages, using an NLI model. Hallucinations become measurable instead of invisible.",
-    href: "https://github.com/agarwaladarshcoding-maker/Advanced-Medical-Based-RAG-System",
-    hrefLabel: "Advanced-Medical-Based-RAG-System",
+      "Splits its own answer into atomic claims and labels each one SUPPORTED, WEAK, UNSUPPORTED or CONTRADICTED against the retrieved passages, using an NLI model. Hallucinations become measurable instead of invisible. Open the demo and it will show you the verdict for every sentence it writes.",
+    href: "https://medical-rag-demo.vercel.app",
+    hrefLabel: "Try the live demo",
   },
   {
     id: "quant",
@@ -158,18 +158,19 @@ export const projects: Project[] = [
     index: "01",
     domain: "AI/ML",
     title: "Evidence-Aware Medical RAG",
-    tagline: "Dual-mode retrieval with hallucination detection",
+    tagline: "Hybrid retrieval with claim-level hallucination detection",
     blurb:
-      "A production-grade medical RAG pipeline that does both dense and vectorless retrieval, then verifies every generated claim against its sources.",
+      "A local-first medical RAG pipeline that answers only from its documents, then splits its own answer into claims and tests each one against the passages it retrieved.",
     description: [
-      "Engineered a dual-mode RAG pipeline supporting dense embedding retrieval via ChromaDB and a vectorless BM25 path, so it can fall back to lightweight retrieval in zero-GPU environments with no vector index dependency.",
-      "Layered hybrid retrieval fusion (BM25 + dense, combined via Reciprocal Rank Fusion and cross-encoder reranking), an NLI-based hallucination detector that checks each claim at the sentence level, and LoRA fine-tuning for factual strictness with exact source attribution.",
+      "Hybrid retrieval: a dense index in ChromaDB for meaning and BM25 for exact tokens, fused by Reciprocal Rank Fusion and narrowed by a cross-encoder reranker. Both halves are needed — embeddings put 'metformin' and 'metoprolol' next to each other, and they are different drugs.",
+      "The verification layer is the point. After the model writes an answer, each sentence is checked against the retrieved evidence by an NLI model and labelled SUPPORTED, WEAK, UNSUPPORTED or CONTRADICTED, then rolled into a single grounding score. Hallucination stops being a worry and becomes a number.",
+      "Hardened in July 2026. The claim splitter was breaking sentences at 'e.g.' and 'i.e.', discarding real claims and verifying the fragments left behind — silently corrupting the hallucination metric the project exists to report. The safety filter refused every question about strokes while the corpus contained a document about strokes. Both fixed, with a 96-test suite pinning them.",
     ],
     highlights: [
-      "Dual-mode (vector + vectorless) retrieval with graceful zero-GPU fallback",
-      "NLI hallucination detection flags ungrounded claims before output",
-      "LoRA cut trainable parameters by ~90% while keeping factual strictness",
-      "Sentence-level source attribution for full clinical traceability",
+      "Every claim labelled against its evidence, with a grounding score",
+      "Hybrid BM25 + dense retrieval fused by rank, not by rescaled scores",
+      "Runs entirely on your machine — no query leaves it",
+      "96 tests; found and fixed four bugs that were silently wrong, not broken",
     ],
     year: "2026",
     role: "Solo build",
@@ -179,10 +180,11 @@ export const projects: Project[] = [
     stack: ["Python", "PyTorch", "ChromaDB", "BM25", "FastAPI", "Ollama"],
     metrics: [
       { value: "4", label: "claim verdicts" },
-      { value: "~90%", label: "fewer trainable params (LoRA)" },
+      { value: "96", label: "tests" },
       { value: "0", label: "data leaving the machine" },
     ],
     github: "https://github.com/agarwaladarshcoding-maker/Advanced-Medical-Based-RAG-System",
+    live: "https://medical-rag-demo.vercel.app",
     featured: true,
   },
   {
@@ -470,20 +472,45 @@ export const achievements: Achievement[] = [
   },
 ];
 
-export type NowItem = { label: string; text: string };
+export type NowItem = { label: string; text: string; href?: string; hrefLabel?: string };
 export type Now = { updated: string; intro: string; items: NowItem[] };
 
-// The /now page — a snapshot of what you're focused on right now.
+// The /now page — what I'm actually doing at the moment.
+//
+// The rest of this site links each claim to something you can open, so this
+// page does the same. A /now page that says the same thing for six months is
+// just an About page with a worse name.
 export const now: Now = {
-  updated: "June 2026",
+  updated: "29 July 2026",
   intro:
-    "A snapshot of what I'm focused on right now — inspired by the /now page movement. Updated from time to time.",
+    "What I'm working on at the moment, rather than a summary of everything I've ever done. Most lines link to the repository, so you can check the dates against the claims.",
   items: [
-    { label: "Building", text: "A low-latency limit order book in C++ and an evidence-aware medical RAG pipeline." },
-    { label: "Learning", text: "Stochastic calculus, market microstructure, and the LMAX Disruptor pattern for lock-free queues." },
-    { label: "Writing", text: "The daily 'Day X of Infinity' series on C++ internals, HFT, and quant finance." },
-    { label: "Studying", text: "B.Tech CSE at IIIT Pune — deep into linear algebra, probability, and DSA." },
-    { label: "Open to", text: "AI/ML and quant internships, freelance, and contract work." },
+    {
+      label: "This week",
+      text: "Going back through my own projects one at a time and fixing what I got wrong the first time. Started with the medical RAG system: found that its sentence splitter was breaking claims at 'e.g.' and 'i.e.', which quietly corrupted the hallucination metric the whole project reports, and that its safety filter refused to answer questions about strokes — while shipping a document about strokes. Both fixed, with 96 tests, and the pipeline is now live as a demo you can use.",
+      href: "https://medical-rag-demo.vercel.app",
+      hrefLabel: "Try the demo",
+    },
+    {
+      label: "Learning",
+      text: "Rebuilding machine learning algorithms from scratch, one at a time, with no framework doing the derivative for me. Linear regression is done; I'm working forward from there. It is slower than importing scikit-learn and that is the entire point.",
+      href: "https://github.com/agarwaladarshcoding-maker/ml-from-scratch",
+      hrefLabel: "ml-from-scratch",
+    },
+    {
+      label: "Practising",
+      text: "Daily competitive programming for ICPC, in C++, pushed every day whether the day went well or not. The public commit history is deliberate: it is harder to skip when the gap is visible.",
+      href: "https://github.com/agarwaladarshcoding-maker/Becoming-God",
+      hrefLabel: "The daily log",
+    },
+    {
+      label: "Studying",
+      text: "B.Tech in Computer Science at IIIT Pune. Linear algebra and probability, mostly — the parts that keep turning up underneath everything else I build.",
+    },
+    {
+      label: "Open to",
+      text: "AI/ML engineering internships and roles, particularly anything involving retrieval, evaluation, or making model output verifiable. Quantitative work is the second track, not the first.",
+    },
   ],
 };
 

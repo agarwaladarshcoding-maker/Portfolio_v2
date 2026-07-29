@@ -3,6 +3,7 @@ import { Bodoni_Moda, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { site } from "@/lib/data";
 import { ContentProvider } from "@/lib/content";
 import Masthead from "@/components/Masthead";
+import Opening from "@/components/Opening";
 import Colophon from "@/components/Colophon";
 import ChatDock from "@/components/ChatDock";
 import "./globals.css";
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={cls}>
       <body className="gridpaper bg-ground font-sans text-[17px] text-bone antialiased">
         <ContentProvider>
+          <Opening />
           <a
             href="#main"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-bone focus:px-4 focus:py-2 focus:text-ground"
