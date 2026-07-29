@@ -1,73 +1,63 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useContent } from "@/lib/content";
-import SectionHeading from "./SectionHeading";
-
-const hidden = { opacity: 0, y: 30 };
-const show = { opacity: 1, y: 0 };
-const viewport = { once: true, margin: "-60px" };
-const trans = { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const };
 
 export default function About() {
   const { content } = useContent();
-  const site = content.site;
-  const about = content.about;
+  const { about, site, facts } = content;
+
   return (
-    <section id="about" className="mx-auto max-w-shell px-[var(--shell-x)] py-20">
-      <SectionHeading index="01" title="About" sub="The short version" />
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_360px]">
-        <motion.div initial={hidden} whileInView={show} viewport={viewport} transition={trans}>
-          <p className="font-display text-2xl font-medium leading-snug text-bone sm:text-3xl">
-            {about.lead}
-          </p>
-          {about.paragraphs.map((para, i) => (
-            <p key={i} className="mt-6 max-w-2xl text-lg leading-relaxed text-bone-dim">
-              {para}
+    <section id="about" className="border-b border-rule px-[var(--shell-x)] py-20 sm:py-28">
+      <div className="mx-auto max-w-shell">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+          <div>
+            <h2 className="display text-[clamp(2rem,4vw,3.25rem)]">Why both halves</h2>
+            <dl className="mt-10 space-y-5 border-t border-rule pt-6">
+              {facts.map((f) => (
+                <div key={f.label}>
+                  <dt className="label">{f.label}</dt>
+                  <dd className="mt-1 text-[15px] leading-snug text-bone">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <div>
+            {/* The lead paragraph carries the argument; Bodoni gives it weight. */}
+            <p className="display max-w-[34ch] text-[clamp(1.4rem,2.3vw,1.9rem)] leading-[1.3]">
+              {about.lead}
             </p>
-          ))}
-        </motion.div>
-        <motion.div
-          className="flex flex-col gap-4"
-          initial={hidden}
-          whileInView={show}
-          viewport={viewport}
-          transition={trans}
-        >
-          {about.cards.map((card) => (
-            <div key={card.label} className="rounded-2xl border border-ink-line p-6">
-              <div className="font-mono text-xs uppercase tracking-[0.2em] text-bone-mute">{card.label}</div>
-              <div className="mt-2 text-bone">{card.value}</div>
+            <div className="mt-8 max-w-prose space-y-5 leading-relaxed text-bone-2">
+              {about.paragraphs.map((p) => (
+                <p key={p.slice(0, 24)}>{p}</p>
+              ))}
             </div>
-          ))}
-          <div className="rounded-2xl border border-ink-line p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.2em] text-bone-mute">Find me</div>
-            <div className="mt-3 flex flex-col gap-2">
+
+            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-rule pt-6">
+              {site.resumeUrl && (
+                <a
+                  href={site.resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-bone px-4 py-2 font-mono text-micro uppercase transition-colors hover:bg-bone hover:text-ground"
+                >
+                  Resume (PDF)
+                </a>
+              )}
               {site.socials.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
-                  className="flex items-center justify-between text-bone-dim transition-colors hover:text-signal"
-                  data-hover
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-micro uppercase text-amber underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
                 >
-                  {s.label} <span>→</span>
+                  {s.label} ↗
                 </a>
               ))}
             </div>
           </div>
-          {site.resumeUrl && (
-            <a
-              href={site.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between rounded-2xl border border-signal/40 bg-signal/10 p-6 text-bone transition-colors hover:border-signal hover:bg-signal/20"
-              data-hover
-            >
-              <span className="font-mono text-xs uppercase tracking-[0.2em]">Resume / CV</span>
-              <span>→</span>
-            </a>
-          )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

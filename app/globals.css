@@ -3,96 +3,131 @@
 @tailwind utilities;
 
 :root {
-  --shell-x: clamp(20px, 5vw, 80px);
+  --shell-x: clamp(20px, 6vw, 72px);
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px;
 }
 
 body {
-  background-color: #0e0f14;
-  color: #ece7dd;
+  background-color: #10262e;
+  color: #f0e9dd;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-/* Custom cursor only where a real pointer exists (keeps touch devices normal). */
-@media (hover: hover) and (pointer: fine) {
-  * {
-    cursor: none;
-  }
-}
-
 ::selection {
-  background: #ff5d3b;
-  color: #0e0f14;
+  background: #ffb870;
+  color: #10262e;
 }
 
-/* Subtle film grain over the whole page. */
-.grain::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+:focus-visible {
+  outline: 2px solid #ffb870;
+  outline-offset: 3px;
 }
 
-@keyframes floaty {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-  100% {
-    transform: translateY(0px);
+/* ── Ground ───────────────────────────────────────────────────────────────
+   A 24px measure, plus a slow petrol wash so the dark never reads as flat
+   black. Both stay well below the type in contrast. */
+.gridpaper {
+  background-image:
+    radial-gradient(900px 500px at 15% -5%, rgba(123, 211, 192, 0.06), transparent 70%),
+    radial-gradient(700px 420px at 92% 8%, rgba(255, 184, 112, 0.05), transparent 70%),
+    linear-gradient(to right, rgba(240, 233, 221, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(240, 233, 221, 0.028) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 24px 24px, 24px 24px;
+  background-attachment: fixed, fixed, scroll, scroll;
+}
+
+/* ── Type ─────────────────────────────────────────────────────────────────
+   Bodoni set tight. Reversed out of a dark ground a Didone wants a touch more
+   weight, or the hairlines disappear. */
+.display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.018em;
+}
+
+.display-tight {
+  line-height: 0.9;
+  letter-spacing: -0.028em;
+}
+
+.label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8298a0;
+}
+
+/* ── Evidence markers ─────────────────────────────────────────────────────
+   The signature. A superscript index tying a claim in the prose to a source
+   in the rail below, the way a footnote does in a paper. */
+.marker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.5em;
+  font-weight: 500;
+  vertical-align: super;
+  line-height: 0;
+  color: #ffb870;
+  margin-left: 0.12em;
+}
+
+.claim {
+  cursor: pointer;
+  background-image: linear-gradient(to right, rgba(255, 184, 112, 0.45), rgba(255, 184, 112, 0.45));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  transition: background-size 0.22s ease, background-color 0.22s ease;
+}
+
+.claim:hover,
+.claim:focus-visible,
+.claim[data-active="true"] {
+  background-color: rgba(255, 184, 112, 0.1);
+  background-size: 100% 2px;
+}
+
+/* Charts inherit the page palette so a figure never drifts from it. */
+.figure text {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  fill: #8298a0;
+}
+
+/* Draw-on, held back for the one stroke per figure that carries the result. */
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
-.animate-floaty {
-  animation: floaty 7s ease-in-out infinite;
+.draw {
+  stroke-dasharray: var(--len, 1200);
+  stroke-dashoffset: var(--len, 1200);
+  animation: draw 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Neural-network visual in the hero. */
-.nn-edge {
-  opacity: 0.12;
-  animation: nnEdge 3.2s ease-in-out infinite;
-}
-
-@keyframes nnEdge {
-  0% {
-    opacity: 0.05;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
-  50% {
-    opacity: 0.42;
-  }
-  100% {
-    opacity: 0.05;
-  }
-}
-
-.nn-node {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: nnNode 2.8s ease-in-out infinite;
-}
-
-@keyframes nnNode {
-  0% {
-    opacity: 0.5;
-    transform: scale(0.85);
-  }
-  50% {
+  to {
     opacity: 1;
-    transform: scale(1.12);
+    transform: none;
   }
-  100% {
-    opacity: 0.5;
-    transform: scale(0.85);
-  }
+}
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -105,5 +140,8 @@ body {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+  .draw {
+    stroke-dashoffset: 0;
   }
 }

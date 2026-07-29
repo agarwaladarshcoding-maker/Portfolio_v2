@@ -6,7 +6,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {
   site as defaultSite,
-  slogans as defaultSlogans,
+  thesis as defaultThesis,
+  evidence as defaultEvidence,
   facts as defaultFacts,
   about as defaultAbout,
   projects as defaultProjects,
@@ -20,7 +21,8 @@ import {
 
 export type SiteContent = {
   site: typeof defaultSite;
-  slogans: typeof defaultSlogans;
+  thesis: typeof defaultThesis;
+  evidence: typeof defaultEvidence;
   facts: typeof defaultFacts;
   about: typeof defaultAbout;
   projects: typeof defaultProjects;
@@ -34,7 +36,8 @@ export type SiteContent = {
 
 export const defaultContent: SiteContent = {
   site: defaultSite,
-  slogans: defaultSlogans,
+  thesis: defaultThesis,
+  evidence: defaultEvidence,
   facts: defaultFacts,
   about: defaultAbout,
   projects: defaultProjects,

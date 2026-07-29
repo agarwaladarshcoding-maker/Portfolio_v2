@@ -1,14 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { useContent } from "@/lib/content";
-
-const fade = { opacity: 0, y: 30 };
-const fadeIn = { opacity: 1, y: 0 };
-const viewport = { once: true, margin: "-40px" };
-const trans = { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const };
-const transDelayed = { duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] as const };
+import Figure from "./Figures";
 
 export default function ProjectDetail({ slug }: { slug: string }) {
   const { content } = useContent();
@@ -18,12 +12,14 @@ export default function ProjectDetail({ slug }: { slug: string }) {
 
   if (!project) {
     return (
-      <main className="mx-auto max-w-shell px-[var(--shell-x)] pb-28 pt-36">
-        <Link href="/work" className="font-mono text-xs uppercase tracking-[0.2em] text-bone-mute hover:text-signal" data-hover>
+      <main className="mx-auto max-w-shell px-[var(--shell-x)] pb-24 pt-32">
+        <Link href="/work" className="font-mono text-micro uppercase text-bone-3 hover:text-amber">
           ← All work
         </Link>
-        <h1 className="mt-8 font-display text-5xl font-bold tracking-tightest text-bone">Project not found</h1>
-        <p className="mt-4 text-bone-dim">This project may have been renamed or removed. Head back to all work.</p>
+        <h1 className="display mt-8 text-5xl">Not found</h1>
+        <p className="mt-4 max-w-prose text-bone-2">
+          That project may have been renamed. The full list is on the work page.
+        </p>
       </main>
     );
   }
@@ -31,117 +27,90 @@ export default function ProjectDetail({ slug }: { slug: string }) {
   const next = projects[(idx + 1) % projects.length];
 
   return (
-    <main className="mx-auto max-w-shell px-[var(--shell-x)] pb-28 pt-36">
-      <Link
-        href="/work"
-        className="font-mono text-xs uppercase tracking-[0.2em] text-bone-mute transition-colors hover:text-signal"
-        data-hover
-      >
+    <main className="mx-auto max-w-shell px-[var(--shell-x)] pb-24 pt-32">
+      <Link href="/work" className="font-mono text-micro uppercase text-bone-3 hover:text-amber">
         ← All work
       </Link>
 
-      <motion.div initial={fade} animate={fadeIn} transition={trans} className="mt-8">
-        <div className="flex flex-wrap items-center gap-4 font-mono text-xs uppercase tracking-[0.2em] text-bone-mute">
-          <span className="text-signal">{project.index}</span>
-          <span>{project.year}</span>
-          <span>{project.role}</span>
-        </div>
-        <h1 className="mt-5 font-display text-[14vw] font-bold leading-[0.95] tracking-tightest text-bone sm:text-7xl">
-          {project.title}
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg text-bone-dim sm:text-xl">{project.tagline}</p>
+      <header className="mt-8 border-b border-rule pb-10">
+        <p className="label">
+          {project.domain} · {project.year} · {project.role}
+        </p>
+        <h1 className="display display-tight mt-4 text-[clamp(2.25rem,6.5vw,4.75rem)]">{project.title}</h1>
+        <p className="mt-5 max-w-prose text-[1.15rem] leading-relaxed text-bone-2">{project.tagline}</p>
 
-        <div className="mt-8 flex flex-wrap gap-4">
-          {project.github ? (
+        <p className="mt-7 max-w-prose border-l-2 border-amber pl-4 text-[1.05rem] leading-relaxed text-bone">
+          {project.result}
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+          {project.github && (
             <a
               href={project.github}
               target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-signal px-6 py-3 font-mono text-xs uppercase tracking-[0.15em] text-ink-deep transition-transform hover:-translate-y-0.5"
-              data-hover
+              rel="noopener noreferrer"
+              className="border border-bone px-4 py-2 font-mono text-micro uppercase transition-colors hover:bg-bone hover:text-ground"
             >
-              GitHub →
+              Read the source ↗
             </a>
-          ) : null}
-          {project.live ? (
+          )}
+          {project.live && (
             <a
               href={project.live}
               target="_blank"
-              rel="noreferrer"
-              className="rounded-full border border-bone/30 px-6 py-3 font-mono text-xs uppercase tracking-[0.15em] text-bone transition-colors hover:border-signal hover:text-signal"
-              data-hover
+              rel="noopener noreferrer"
+              className="font-mono text-micro uppercase text-amber underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
             >
-              Live site →
+              Live ↗
             </a>
-          ) : null}
+          )}
         </div>
-      </motion.div>
+      </header>
 
-      <motion.div
-        initial={fade}
-        whileInView={fadeIn}
-        viewport={viewport}
-        transition={transDelayed}
-        className="mt-16 grid gap-12 md:grid-cols-[1fr_300px]"
-      >
+      <div className="mt-12 grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
         <div>
-          {project.description.map((para, i) => (
-            <p key={i} className="mb-5 text-lg leading-relaxed text-bone-dim">
-              {para}
-            </p>
-          ))}
-          <h2 className="mt-10 font-display text-2xl font-semibold text-bone">Highlights</h2>
-          <ul className="mt-5 flex flex-col gap-3">
+          <div className="max-w-prose space-y-5 text-[1.05rem] leading-relaxed text-bone-2">
+            {project.description.map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+          </div>
+
+          <h2 className="label mt-12 border-b border-rule pb-3">What it does</h2>
+          <ul className="mt-5 space-y-3">
             {project.highlights.map((h) => (
-              <li key={h} className="flex gap-3 text-bone-dim">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-signal" />
+              <li key={h} className="flex gap-3 leading-relaxed text-bone-2">
+                <span className="mt-[10px] h-1 w-3 shrink-0 bg-amber" />
                 {h}
               </li>
             ))}
           </ul>
         </div>
-        <aside className="flex h-max flex-col gap-6 rounded-2xl border border-ink-line p-6">
-          <div>
-            <div className="font-mono text-xs uppercase tracking-[0.2em] text-bone-mute">Stack</div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {project.stack.map((s) => (
-                <span
-                  key={s}
-                  className="rounded-full border border-ink-line px-3 py-1 font-mono text-[11px] text-bone-mute"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-          {project.metrics.length > 0 ? (
-            <div>
-              <div className="font-mono text-xs uppercase tracking-[0.2em] text-bone-mute">Impact</div>
-              <div className="mt-3 flex flex-col gap-4">
-                {project.metrics.map((m) => (
-                  <div key={m.label}>
-                    <div className="font-display text-2xl font-bold text-bone">{m.value}</div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-bone-mute">{m.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
-        </aside>
-      </motion.div>
 
-      {next ? (
-        <Link
-          href={`/work/${next.slug}`}
-          className="group mt-20 flex items-center justify-between border-t border-ink-line pt-8"
-          data-hover
-        >
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-bone-mute">Next project</span>
-          <span className="font-display text-2xl font-semibold text-bone transition-colors group-hover:text-signal">
-            {next.title} →
-          </span>
+        <aside>
+          <Figure kind={project.figure} />
+
+          <dl className="mt-8 border-t border-rule pt-6">
+            {project.metrics.map((m) => (
+              <div key={m.label} className="mb-5">
+                <dt className="display text-[1.75rem] leading-none">{m.value}</dt>
+                <dd className="label mt-1.5">{m.label}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="border-t border-rule pt-6">
+            <p className="label mb-3">Built with</p>
+            <p className="font-mono text-[12px] leading-relaxed text-bone-2">{project.stack.join(" · ")}</p>
+          </div>
+        </aside>
+      </div>
+
+      {next && (
+        <Link href={`/work/${next.slug}`} className="group mt-20 flex flex-wrap items-baseline justify-between gap-4 border-t border-rule pt-8">
+          <span className="label">Next</span>
+          <span className="display text-[1.6rem] group-hover:text-amber">{next.title} →</span>
         </Link>
-      ) : null}
+      )}
     </main>
   );
 }

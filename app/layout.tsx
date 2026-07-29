@@ -1,16 +1,32 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Bodoni_Moda, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { site } from "@/lib/data";
 import { ContentProvider } from "@/lib/content";
-import Cursor from "@/components/Cursor";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
+import Masthead from "@/components/Masthead";
+import Colophon from "@/components/Colophon";
 import ChatDock from "@/components/ChatDock";
 import "./globals.css";
 
-const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+// Bodoni Moda is a true Didone — the same lineage as the Computer Modern his
+// LaTeX resume is set in. Plex carries the engineering register underneath it.
+const display = Bodoni_Moda({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+const sans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500"],
+});
 
 // metadataBase makes the generated opengraph-image URL absolute, which every
 // scraper (LinkedIn, WhatsApp, X) requires.
@@ -34,15 +50,20 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const cls = `${sans.variable} ${display.variable} ${mono.variable}`;
+  const cls = `${display.variable} ${sans.variable} ${mono.variable}`;
   return (
     <html lang="en" className={cls}>
-      <body className="grain font-sans antialiased">
+      <body className="gridpaper bg-ground font-sans text-[17px] text-bone antialiased">
         <ContentProvider>
-          <Cursor />
-          <Nav />
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-bone focus:px-4 focus:py-2 focus:text-ground"
+          >
+            Skip to content
+          </a>
+          <Masthead />
           {children}
-          <Footer />
+          <Colophon />
           <ChatDock />
         </ContentProvider>
       </body>

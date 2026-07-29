@@ -2,7 +2,7 @@
 // og:image and twitter:image, so there is no static asset to keep in sync with
 // lib/data.ts. Uses only system-safe layout — no remote fonts, no network.
 import { ImageResponse } from "next/og";
-import { site } from "@/lib/data";
+import { site, thesis } from "@/lib/data";
 
 export const alt = `${site.name} — ${site.role}`;
 export const size = { width: 1200, height: 630 };
@@ -18,40 +18,61 @@ export default function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0e0f14",
-          padding: "72px 80px",
-          fontFamily: "sans-serif",
+          background: "#EDEFF2",
+          padding: "68px 76px",
+          fontFamily: "Georgia, serif",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 16,
-            color: "#7c7a74",
-            fontSize: 24,
-            letterSpacing: 6,
+            gap: 14,
+            color: "#8B95A0",
+            fontSize: 22,
+            letterSpacing: 5,
             textTransform: "uppercase",
+            fontFamily: "monospace",
           }}
         >
-          <div style={{ width: 14, height: 14, borderRadius: 7, background: "#ff5d3b" }} />
-          {site.location}
+          <div style={{ width: 10, height: 10, borderRadius: 5, background: "#1A2FD6" }} />
+          {site.role} · {site.location}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ color: "#ece7dd", fontSize: 92, fontWeight: 700, lineHeight: 1.05 }}>
-            {site.name}
-          </div>
-          <div style={{ color: "#ff5d3b", fontSize: 46, fontWeight: 600, marginTop: 12 }}>
-            {site.role}
-          </div>
+          {/* Three lines, matching the hero. Satori needs every multi-child
+              node to declare display, so each line is its own flex row. */}
+          {thesis.headline.map((line, i) => (
+            <div
+              key={line}
+              style={{
+                display: "flex",
+                color: "#0A1017",
+                fontSize: 96,
+                fontWeight: 500,
+                lineHeight: 1.02,
+                letterSpacing: -2,
+              }}
+            >
+              {i === thesis.headline.length - 1 ? (
+                <>
+                  <span>{line.replace(/\.$/, "")}</span>
+                  <span style={{ color: "#1A2FD6" }}>.</span>
+                </>
+              ) : (
+                <span>{line}</span>
+              )}
+            </div>
+          ))}
           <div
             style={{
-              color: "#b6b2a9",
-              fontSize: 28,
+              display: "flex",
+              color: "#4E5A66",
+              fontSize: 26,
               lineHeight: 1.45,
               marginTop: 28,
-              maxWidth: 900,
+              maxWidth: 880,
+              fontFamily: "sans-serif",
             }}
           >
             {site.summary}
@@ -62,14 +83,15 @@ export default function Image() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            color: "#7c7a74",
-            fontSize: 24,
-            borderTop: "1px solid #262833",
-            paddingTop: 28,
+            color: "#8B95A0",
+            fontSize: 22,
+            borderTop: "1px solid #D3D9DF",
+            paddingTop: 24,
+            fontFamily: "monospace",
           }}
         >
+          <div style={{ display: "flex", color: "#0A1017" }}>{site.name}</div>
           <div style={{ display: "flex" }}>know-about-adarsh.vercel.app</div>
-          <div style={{ display: "flex" }}>{site.email}</div>
         </div>
       </div>
     ),
