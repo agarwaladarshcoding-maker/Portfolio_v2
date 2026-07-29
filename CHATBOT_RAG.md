@@ -41,8 +41,8 @@ app/api/chat/route.ts     → adds system prompt, calls the LLM (Groq/xAI/OpenAI
 Grounded answer  (falls back to the offline rule-based engine if no key)
 ```
 
-- **Knowledge base:** `profileDoc` in `lib/data.ts`, fully editable at `/admin`
-  ("Profile document" section) and exportable to PDF from there.
+- **Knowledge base:** `profileDoc` in `lib/data.ts` — edit that file to change what
+  AdarshAI knows.
 - **Chunking / retrieval:** `lib/rag.ts` (`buildCorpus`, `chunkText`, `retrieve`).
 - **LLM call:** `app/api/chat/route.ts` (OpenAI-compatible).
 - **Widget + voice:** `components/ChatDock.tsx` — speech-to-text (mic) and

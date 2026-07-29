@@ -12,13 +12,24 @@ const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap
 const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
+// metadataBase makes the generated opengraph-image URL absolute, which every
+// scraper (LinkedIn, WhatsApp, X) requires.
+const url = "https://know-about-adarsh.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(url),
   title: `${site.name} — ${site.role}`,
   description: site.summary,
   openGraph: {
     title: `${site.name} — ${site.role}`,
     description: site.summary,
     type: "website",
+    url,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.role}`,
+    description: site.summary,
   },
 };
 

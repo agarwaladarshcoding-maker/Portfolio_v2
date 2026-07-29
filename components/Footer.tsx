@@ -6,7 +6,9 @@ import { useContent } from "@/lib/content";
 export default function Footer() {
   const { content } = useContent();
   const site = content.site;
-  const [clock, setClock] = useState("--:--:--");
+  // Empty until mount: the server has no client timezone, so rendering a time
+  // (or a placeholder) here is a hydration-mismatch source.
+  const [clock, setClock] = useState("");
   useEffect(() => {
     const tick = () => {
       try {
@@ -31,7 +33,7 @@ export default function Footer() {
     <footer className="relative z-10 border-t border-ink-line px-[var(--shell-x)] py-8">
       <div className="mx-auto flex max-w-shell flex-col items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.2em] text-bone-mute sm:flex-row">
         <span>{"\u00A9"} {new Date().getFullYear()} {site.name}</span>
-        <span>{site.location} {"\u00B7"} {clock}</span>
+        <span>{site.location}{clock && <> {"\u00B7"} {clock}</>}</span>
         <div className="flex items-center gap-5">
           {site.socials.map((s) => (
             <a
@@ -43,9 +45,6 @@ export default function Footer() {
               {s.label}
             </a>
           ))}
-          <a href="/admin" className="transition-colors hover:text-bone" data-hover>
-            Admin
-          </a>
         </div>
       </div>
     </footer>

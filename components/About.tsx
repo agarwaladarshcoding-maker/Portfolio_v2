@@ -55,14 +55,18 @@ export default function About() {
               ))}
             </div>
           </div>
-          <a
-            href={site.resumeUrl}
-            className="flex items-center justify-between rounded-2xl border border-signal/40 bg-signal/10 p-6 text-bone transition-colors hover:border-signal hover:bg-signal/20"
-            data-hover
-          >
-            <span className="font-mono text-xs uppercase tracking-[0.2em]">Resume / CV</span>
-            <span>→</span>
-          </a>
+          {site.resumeUrl && (
+            <a
+              href={site.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between rounded-2xl border border-signal/40 bg-signal/10 p-6 text-bone transition-colors hover:border-signal hover:bg-signal/20"
+              data-hover
+            >
+              <span className="font-mono text-xs uppercase tracking-[0.2em]">Resume / CV</span>
+              <span>→</span>
+            </a>
+          )}
         </motion.div>
       </div>
     </section>

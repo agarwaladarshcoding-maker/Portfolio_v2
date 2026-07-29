@@ -1,6 +1,5 @@
 // ──────────────────────────────────────────────────────────
-// DEFAULT SITE CONTENT. This is the seed used on first load.
-// You can also edit everything live from /admin (it saves to your browser).
+// SITE CONTENT. Everything the site renders is defined here.
 // ──────────────────────────────────────────────────────────
 
 export const site = {
@@ -15,7 +14,9 @@ export const site = {
   summary:
     "Computer Science undergrad at IIIT Pune building production-grade ML systems, CUDA tensor engines, and LLM/RAG pipelines — plus low-latency C++ for quantitative finance, all on a strong maths foundation.",
   email: "agarwalaadarsh.work@gmail.com",
-  resumeUrl: "#",
+  // Served from public/. Leave this empty to hide the Resume / CV link entirely
+  // rather than render a dead one.
+  resumeUrl: "/adarsh-agarwala-resume.pdf",
   socials: [
     { label: "GitHub", href: "https://github.com/agarwaladarshcoding-maker" },
     { label: "LinkedIn", href: "https://linkedin.com/in/adarsh-agarwala" },
@@ -447,7 +448,6 @@ export const chatbot = {
 // =============================================================================
 // PROFILE DOCUMENT — the chatbot's RAG knowledge base.
 // This long-form text is chunked (by ## headings) and retrieved at query time.
-// It is fully editable from the /admin panel, and can be exported to PDF there.
 // =============================================================================
 export const profileDoc = [
   "# Adarsh Agarwala — Profile Knowledge Base",

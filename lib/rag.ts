@@ -6,7 +6,7 @@
 //   2. Lexical (vectorless) retrieval: a TF-IDF keyword score over every chunk,
 //      so exact terms like "AgentWatch", "pairs trading" or "resume" rank high
 //      without needing any embedding model or vector database.
-// The free-form, admin-editable profile document is chunked by its ## headings
+// The free-form profile document is chunked by its ## headings
 // and folded into the same pool. retrieve() returns the top-k chunks, which the
 // API route then hands to the LLM as grounding context.
 
@@ -135,7 +135,9 @@ export function buildCorpus(c: SiteContent): Chunk[] {
     text:
       "Email: " + c.site.email + ". " +
       c.site.socials.map((s) => s.label + " " + s.href).join(". ") +
-      ". Resume / CV: " + c.site.resumeUrl + ".",
+      (c.site.resumeUrl
+        ? ". Resume / CV: " + c.site.resumeUrl + "."
+        : ". Resume / CV: available on request by email."),
   });
 
   for (const dc of chunkText(c.profileDoc)) chunks.push(dc);

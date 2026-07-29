@@ -1,8 +1,7 @@
 "use client";
 
-// Live, editable content layer.
-// Defaults come from data.ts. The /admin page saves overrides into the browser
-// (localStorage), and every section reads the merged result via useContent().
+// Content layer. Defaults come from data.ts and every section reads them via
+// useContent(); overrides previously saved to localStorage are still honoured.
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {
