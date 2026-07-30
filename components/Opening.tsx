@@ -63,9 +63,20 @@ export default function Opening() {
     document.body.style.overflow = "hidden";
     setPhase("playing");
 
+    // Unlocking has to happen here, not only in the cleanup below. The cleanup
+    // runs on unmount or a route change, and this component sits in the root
+    // layout — so a visitor who lands on / and stays there (which is most of
+    // them) would never trigger it, and the page would stay unscrollable for
+    // the rest of the session.
+    const unlock = () => {
+      document.body.style.overflow = "";
+      if ("scrollRestoration" in history) history.scrollRestoration = "auto";
+    };
+
     const finish = () => {
       sessionStorage.setItem("openingSeen", "1");
       window.scrollTo(0, 0);
+      unlock();
       setPhase("leaving");
       window.setTimeout(() => setPhase("done"), 700);
     };
@@ -104,8 +115,7 @@ export default function Opening() {
     return () => {
       if (frame.current) cancelAnimationFrame(frame.current);
       window.clearTimeout(timer);
-      document.body.style.overflow = "";
-      if ("scrollRestoration" in history) history.scrollRestoration = "auto";
+      unlock();
     };
   }, [pathname]);
 
