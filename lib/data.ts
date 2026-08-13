@@ -114,7 +114,8 @@ export type FigureKind =
   | "ladder"
   | "paths"
   | "variance"
-  | "trace";
+  | "trace"
+  | "grounding";
 
 export type Project = {
   slug: string;
@@ -216,7 +217,7 @@ export const projects: Project[] = [
     ],
     year: "2026",
     role: "Solo build",
-    figure: "trace",
+    figure: "grounding",
     track: "ai",
     tier: 1,
     result:

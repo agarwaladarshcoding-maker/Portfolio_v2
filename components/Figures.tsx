@@ -247,6 +247,108 @@ function ClaimsFigure() {
   );
 }
 
+/* ── Grounding: a cited claim reaches the reply, an uncited one does not ── */
+function GroundingFigure() {
+  const w = 560;
+  const h = 178;
+  const agent = { x: 128, y: 64, w: 96, h: 52 };
+  const endpointYs = [30, 60, 90, 120, 150];
+  const factsX = 370;
+  const centerY = 90;
+
+  return (
+    <Frame label="Fig. — grounding loop, cited claims reach the reply">
+      <div className="px-1">
+        <svg
+          viewBox={`0 0 ${w} ${h}`}
+          className="w-full"
+          role="img"
+          aria-label="A tool-calling agent loop: the query goes to the agent, the agent calls five live endpoints, and only a claim carrying a citation from those endpoints reaches the reply — an uncited claim is dropped before it does"
+        >
+          <text x={312} y={12} textAnchor="middle">5 LIVE ENDPOINTS</text>
+
+          {/* query into the agent */}
+          <rect x={16} y={76} width={68} height={28} fill="none" stroke={RULE} strokeWidth="1" />
+          <text x={50} y={94} textAnchor="middle" fill={BONE}>QUERY</text>
+          <line x1={84} y1={centerY} x2={agent.x} y2={centerY} stroke={RULE} strokeWidth="1" />
+
+          {/* the agent, split across a 70B agent and an 8B router */}
+          <rect x={agent.x} y={agent.y} width={agent.w} height={agent.h} fill="none" stroke={AMBER} strokeWidth="1.2" />
+          <text x={176} y={87} textAnchor="middle" fill={BONE}>AGENT</text>
+          <text x={176} y={101} textAnchor="middle">70B + 8B</text>
+
+          {/* one tool call out per live endpoint */}
+          {endpointYs.map((cy) => (
+            <line
+              key={`out-${cy}`}
+              x1={agent.x + agent.w}
+              y1={centerY}
+              x2={290}
+              y2={cy}
+              stroke={RULE}
+              strokeWidth="0.75"
+              opacity="0.7"
+            />
+          ))}
+          {endpointYs.map((cy, i) => (
+            <g key={`ep-${cy}`}>
+              <rect x={290} y={cy - 8} width={44} height={16} fill="none" stroke={RULE} strokeWidth="1" />
+              <text x={312} y={cy + 3} textAnchor="middle">{`0${i + 1}`}</text>
+            </g>
+          ))}
+          {/* facts return, each one carrying a citation back to its endpoint */}
+          {endpointYs.map((cy) => (
+            <line
+              key={`in-${cy}`}
+              x1={334}
+              y1={cy}
+              x2={factsX}
+              y2={centerY}
+              stroke={AQUA}
+              strokeWidth="0.75"
+              opacity="0.55"
+            />
+          ))}
+          <circle cx={factsX} cy={centerY} r="3" fill={AQUA} />
+
+          {/* the gate: a cited claim reaches the reply, an uncited one is a dead end */}
+          <path
+            d={`M${factsX},${centerY} L410,50 L470,50`}
+            fill="none"
+            stroke={AMBER}
+            strokeWidth="1.4"
+            strokeLinejoin="round"
+            className="draw"
+            style={{ ["--len" as string]: 200 }}
+          />
+          <path d="M453,50 L458,55 L466,42" fill="none" stroke={AMBER} strokeWidth="1.4" />
+          <text x={440} y={42} textAnchor="middle" fill={AMBER}>cited claim</text>
+
+          <path
+            d={`M${factsX},${centerY} L410,130 L432,130`}
+            fill="none"
+            stroke={MUTE}
+            strokeWidth="1"
+            strokeDasharray="3 3"
+            opacity="0.6"
+          />
+          <path d="M427,125 L437,135" stroke={MUTE} strokeWidth="1.2" />
+          <path d="M437,125 L427,135" stroke={MUTE} strokeWidth="1.2" />
+          <text x={401} y={148} textAnchor="middle">dropped — no citation</text>
+
+          <rect x={470} y={36} width={74} height={28} fill="none" stroke={BONE} strokeWidth="1.2" />
+          <text x={507} y={53} textAnchor="middle" fill={BONE}>REPLY</text>
+        </svg>
+        <p className="mt-4 font-mono text-[10px] leading-relaxed text-bone-3">
+          Every claim in the reply is traced to the tool call that returned it. A claim
+          that arrives without a citation is dropped before assembly — it never reaches
+          the user.
+        </p>
+      </div>
+    </Frame>
+  );
+}
+
 /* ── Trace: classified agent activity ──────────────────────────────────── */
 function TraceFigure() {
   const total = traceEvents.reduce((a, e) => a + e.span, 0);
@@ -289,6 +391,7 @@ const figures: Record<FigureKind, () => JSX.Element> = {
   ladder: LadderFigure,
   claims: ClaimsFigure,
   trace: TraceFigure,
+  grounding: GroundingFigure,
 };
 
 export default function Figure({ kind }: { kind: FigureKind }) {
