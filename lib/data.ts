@@ -128,6 +128,9 @@ export type Project = {
   role: string;
   domain?: string;
   figure: FigureKind;
+  track: "ai" | "quant";
+  tier: 1 | 2 | 3;
+  shot?: { src: string; alt: string };
   // One sentence naming the thing the project proves it can do.
   result: string;
   stack: string[];
@@ -151,7 +154,7 @@ export const about = {
   ],
 };
 
-// Projects with a GitHub link. First 3 (featured) show on the home page.
+// Projects with a GitHub link. First 3 (featured, tier 1) show on the home page.
 export const projects: Project[] = [
   {
     slug: "medical-rag",
@@ -175,6 +178,12 @@ export const projects: Project[] = [
     year: "2026",
     role: "Solo build",
     figure: "claims",
+    track: "ai",
+    tier: 1,
+    shot: {
+      src: "/img/shot-medical-rag-card.webp",
+      alt: "The demo's verification panel: 100% grounded in the sources, retrieved by bm25 + dense over 25 candidates, with each claim labelled SUPPORTED at entailment 1.00 and traced to its source file.",
+    },
     result:
       "Every sentence the model writes is checked against the passages it retrieved, and labelled.",
     stack: ["Python", "PyTorch", "ChromaDB", "BM25", "FastAPI", "Ollama"],
@@ -188,164 +197,9 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    slug: "pairs-trading",
-    index: "02",
-    domain: "Quant",
-    title: "Mean-Reverting Pairs Trading",
-    tagline: "Statistical arbitrage on real market data",
-    blurb:
-      "A full stat-arb pipeline on GOOGL/MSFT — cointegration testing, rolling hedge ratios, and z-score signals over three years of real data.",
-    description: [
-      "Built a complete statistical-arbitrage pipeline on GOOGL/MSFT using three years of real market data via yfinance, with log-price transformation to stabilise variance and linearise the cointegration relationship.",
-      "A rolling 90-day OLS regression computes dynamic hedge ratios and the residual spread; stationarity is validated with the Augmented Dickey-Fuller test, and z-score signals fire at plus/minus 2 standard deviations, visualised in a dual-panel dashboard.",
-    ],
-    highlights: [
-      "3 years of real GOOGL/MSFT data via yfinance",
-      "Rolling 90-day OLS hedge ratios + ADF cointegration test",
-      "Z-score entry/exit at plus/minus 2 sigma with a dual-panel dashboard",
-    ],
-    year: "2025-26",
-    role: "Solo build",
-    figure: "spread",
-    result:
-      "The spread has to pass an ADF stationarity test before a single signal is allowed to fire.",
-    stack: ["Python", "Pandas", "statsmodels", "yfinance"],
-    metrics: [
-      { value: "3 yrs", label: "GOOGL/MSFT daily data" },
-      { value: "90d", label: "rolling hedge-ratio window" },
-      { value: "±2σ", label: "entry band" },
-    ],
-    github:
-      "https://github.com/agarwaladarshcoding-maker/Project-Section/tree/main/Quant-Finance-Project/Mean%20Reverting%20Pairs",
-    featured: false,
-  },
-  {
-    slug: "order-matching-engine",
-    index: "03",
-    domain: "Systems",
-    title: "HFT Order Matching Engine",
-    tagline: "Low-latency limit order book in modern C++",
-    blurb:
-      "A low-latency limit order book with price-time priority matching, O(1) lookups, and a cache-optimised memory layout.",
-    description: [
-      "Building a low-latency limit order book (LOB) in C++17/20 with price-time priority matching, O(1) hash-map lookups, and a cache-line-optimised memory layout, using smart pointers for memory safety.",
-      "Researching the LMAX Disruptor pattern for a lock-free queue design to push throughput further. An ongoing systems project about understanding market microstructure from the metal up.",
-    ],
-    highlights: [
-      "Price-time priority matching with O(1) lookups",
-      "Cache-line-optimised memory layout + smart-pointer safety",
-      "Researching LMAX Disruptor lock-free queues",
-    ],
-    year: "2026 · in progress",
-    role: "Solo build",
-    figure: "ladder",
-    result:
-      "Price-time priority, resolved against the book in constant time per lookup.",
-    stack: ["C++17/20", "STL", "CMake"],
-    metrics: [
-      { value: "O(1)", label: "order lookup" },
-      { value: "price-time", label: "matching priority" },
-    ],
-    github: "https://github.com/agarwaladarshcoding-maker/High-Frequency-Order-Book",
-    featured: false,
-  },
-  {
-    slug: "agentwatch",
-    index: "04",
-    domain: "AI/ML",
-    title: "AgentWatch",
-    tagline: "ML-powered AI agent activity monitor",
-    blurb:
-      "A macOS monitor that intercepts CLI AI tools in real time and classifies their activity with a custom ML model at ~99% accuracy.",
-    description: [
-      "Built a macOS system-level monitor that intercepts real-time stdout from CLI AI tools (Gemini CLI, Claude Code) via a custom PTY wrapper, enabling programmatic session tracking across concurrent agent processes.",
-      "A custom TF-IDF + LinearSVC classifier hits ~99% accuracy across 7 event types, replacing fragile regex detection; a WebSocket notification and reply-injection layer plus a companion Chrome extension support live multi-session monitoring.",
-    ],
-    highlights: [
-      "PTY wrapper intercepts CLI agents in real time",
-      "TF-IDF + LinearSVC classifier at ~99% across 7 event types",
-      "WebSocket notifications + Chrome extension for multi-session monitoring",
-    ],
-    year: "2026",
-    role: "Solo build",
-    figure: "trace",
-    result:
-      "Watches a CLI agent's output stream and says what it is doing, without changing how it behaves.",
-    stack: ["Electron", "TypeScript", "node-pty", "scikit-learn", "SQLite"],
-    metrics: [
-      { value: "~99%", label: "classifier accuracy" },
-      { value: "7", label: "event types" },
-      { value: "20+", label: "browser agents monitored" },
-    ],
-    github: "https://github.com/agarwaladarshcoding-maker/AgentWatcher",
-    featured: true,
-  },
-  {
-    slug: "monte-carlo-option-pricer",
-    index: "05",
-    domain: "Quant",
-    title: "Monte Carlo Option Pricer",
-    tagline: "Exotic barrier options via simulated GBM",
-    blurb:
-      "Prices down-and-out barrier options over 100k simulated GBM paths in under 1.8s, with early-exit optimisation.",
-    description: [
-      "Priced down-and-out barrier options via discretised Geometric Brownian Motion over 252 daily steps across 100,000 simulation paths, completing in under 1.8 seconds using a Mersenne Twister PRNG for high-quality normal variates.",
-      "Early-exit branch logic terminates knocked-out paths on barrier breach, cutting CPU cycles by ~30%; paths export to CSV for downstream volatility-surface analysis.",
-    ],
-    highlights: [
-      "100,000 GBM paths in under 1.8 seconds",
-      "~30% fewer CPU cycles via early-exit on barrier breach",
-      "CSV export for volatility-surface analysis",
-    ],
-    year: "2026",
-    role: "Solo build",
-    figure: "paths",
-    result:
-      "Paths that breach the barrier are abandoned the moment they breach it, not at expiry.",
-    stack: ["C++", "Python", "Pandas", "Matplotlib"],
-    metrics: [
-      { value: "100k", label: "GBM paths" },
-      { value: "<1.8s", label: "runtime" },
-      { value: "~30%", label: "CPU cycles saved by early exit" },
-    ],
-    github: "https://github.com/agarwaladarshcoding-maker/Monte-Carlo-Project-Simulator",
-    featured: false,
-  },
-  {
-    slug: "pca-factor-model",
-    index: "06",
-    domain: "Quant",
-    title: "PCA Factor Model",
-    tagline: "Principal components from scratch with SVD",
-    blurb:
-      "A from-scratch PCA factor model using SVD in NumPy — no ML libraries — preserving 95%+ of variance across multi-asset returns.",
-    description: [
-      "Built Principal Component Analysis from scratch using Singular Value Decomposition in NumPy with no ML libraries, applied to multi-asset financial return data.",
-      "The model preserves over 95% of explained variance, surfacing dominant market-factor loadings and cumulative-variance plots.",
-    ],
-    highlights: [
-      "PCA via raw SVD in NumPy, no ML libraries",
-      "Preserves 95%+ of explained variance",
-      "Visualises dominant market-factor loadings",
-    ],
-    year: "2025",
-    role: "Solo build",
-    figure: "variance",
-    result:
-      "No sklearn. The decomposition is the SVD, written out, so the maths is inspectable.",
-    stack: ["Python", "NumPy", "Pandas", "Matplotlib"],
-    metrics: [
-      { value: "95%+", label: "variance retained" },
-      { value: "0", label: "ML libraries used" },
-    ],
-    github:
-      "https://github.com/agarwaladarshcoding-maker/Project-Section/tree/main/Quant-Finance-Project/portfolio-manger-v2",
-    featured: false,
-  },
-  {
     slug: "amber-copilot",
-    index: "07",
-    domain: "AI/ML",
+    index: "02",
+    domain: "Agentic AI",
     title: "amber Copilot",
     tagline: "A booking assistant grounded in live inventory",
     blurb:
@@ -363,6 +217,8 @@ export const projects: Project[] = [
     year: "2026",
     role: "Solo build",
     figure: "trace",
+    track: "ai",
+    tier: 1,
     result:
       "Grounding guardrails mean a hallucinated property or price cannot reach the user.",
     stack: ["Python", "FastAPI", "Groq / Llama 3.3", "Redis", "React", "Docker"],
@@ -373,6 +229,171 @@ export const projects: Project[] = [
     ],
     github: "https://github.com/agarwaladarshcoding-maker/Amber-Student-Chatbot",
     featured: true,
+  },
+  {
+    slug: "agentwatch",
+    index: "03",
+    domain: "Agentic AI",
+    title: "AgentWatch",
+    tagline: "ML-powered AI agent activity monitor",
+    blurb:
+      "A macOS monitor that intercepts CLI AI tools in real time and classifies their activity with a custom ML model at ~99% accuracy.",
+    description: [
+      "Built a macOS system-level monitor that intercepts real-time stdout from CLI AI tools (Gemini CLI, Claude Code) via a custom PTY wrapper, enabling programmatic session tracking across concurrent agent processes.",
+      "A custom TF-IDF + LinearSVC classifier hits ~99% accuracy across 7 event types, replacing fragile regex detection; a WebSocket notification and reply-injection layer plus a companion Chrome extension support live multi-session monitoring.",
+    ],
+    highlights: [
+      "PTY wrapper intercepts CLI agents in real time",
+      "TF-IDF + LinearSVC classifier at ~99% across 7 event types",
+      "WebSocket notifications + Chrome extension for multi-session monitoring",
+    ],
+    year: "2026",
+    role: "Solo build",
+    figure: "trace",
+    track: "ai",
+    tier: 1,
+    result:
+      "Watches a CLI agent's output stream and says what it is doing, without changing how it behaves.",
+    stack: ["Electron", "TypeScript", "node-pty", "scikit-learn", "SQLite"],
+    metrics: [
+      { value: "~99%", label: "classifier accuracy" },
+      { value: "7", label: "event types" },
+      { value: "20+", label: "browser agents monitored" },
+    ],
+    github: "https://github.com/agarwaladarshcoding-maker/AgentWatcher",
+    featured: true,
+  },
+  {
+    slug: "order-matching-engine",
+    index: "04",
+    domain: "Systems",
+    title: "HFT Order Matching Engine",
+    tagline: "Low-latency limit order book in modern C++",
+    blurb:
+      "A low-latency limit order book with price-time priority matching, O(1) lookups, and a cache-optimised memory layout.",
+    description: [
+      "Building a low-latency limit order book (LOB) in C++17/20 with price-time priority matching, O(1) hash-map lookups, and a cache-line-optimised memory layout, using smart pointers for memory safety.",
+      "Researching the LMAX Disruptor pattern for a lock-free queue design to push throughput further. An ongoing systems project about understanding market microstructure from the metal up.",
+    ],
+    highlights: [
+      "Price-time priority matching with O(1) lookups",
+      "Cache-line-optimised memory layout + smart-pointer safety",
+      "Researching LMAX Disruptor lock-free queues",
+    ],
+    year: "2026 · in progress",
+    role: "Solo build",
+    figure: "ladder",
+    track: "quant",
+    tier: 2,
+    result:
+      "Price-time priority, resolved against the book in constant time per lookup.",
+    stack: ["C++17/20", "STL", "CMake"],
+    metrics: [
+      { value: "O(1)", label: "order lookup" },
+      { value: "price-time", label: "matching priority" },
+    ],
+    github: "https://github.com/agarwaladarshcoding-maker/High-Frequency-Order-Book",
+    featured: false,
+  },
+  {
+    slug: "pairs-trading",
+    index: "05",
+    domain: "Quant",
+    title: "Mean-Reverting Pairs Trading",
+    tagline: "Statistical arbitrage on real market data",
+    blurb:
+      "A full stat-arb pipeline on GOOGL/MSFT — cointegration testing, rolling hedge ratios, and z-score signals over three years of real data.",
+    description: [
+      "Built a complete statistical-arbitrage pipeline on GOOGL/MSFT using three years of real market data via yfinance, with log-price transformation to stabilise variance and linearise the cointegration relationship.",
+      "A rolling 90-day OLS regression computes dynamic hedge ratios and the residual spread; stationarity is validated with the Augmented Dickey-Fuller test, and z-score signals fire at plus/minus 2 standard deviations, visualised in a dual-panel dashboard.",
+    ],
+    highlights: [
+      "3 years of real GOOGL/MSFT data via yfinance",
+      "Rolling 90-day OLS hedge ratios + ADF cointegration test",
+      "Z-score entry/exit at plus/minus 2 sigma with a dual-panel dashboard",
+    ],
+    year: "2025-26",
+    role: "Solo build",
+    figure: "spread",
+    track: "quant",
+    tier: 2,
+    result:
+      "The spread has to pass an ADF stationarity test before a single signal is allowed to fire.",
+    stack: ["Python", "Pandas", "statsmodels", "yfinance"],
+    metrics: [
+      { value: "3 yrs", label: "GOOGL/MSFT daily data" },
+      { value: "90d", label: "rolling hedge-ratio window" },
+      { value: "±2σ", label: "entry band" },
+    ],
+    github:
+      "https://github.com/agarwaladarshcoding-maker/Project-Section/tree/main/Quant-Finance-Project/Mean%20Reverting%20Pairs",
+    featured: false,
+  },
+  {
+    slug: "monte-carlo-option-pricer",
+    index: "06",
+    domain: "Quant",
+    title: "Monte Carlo Option Pricer",
+    tagline: "Exotic barrier options via simulated GBM",
+    blurb:
+      "Prices down-and-out barrier options over 100k simulated GBM paths in under 1.8s, with early-exit optimisation.",
+    description: [
+      "Priced down-and-out barrier options via discretised Geometric Brownian Motion over 252 daily steps across 100,000 simulation paths, completing in under 1.8 seconds using a Mersenne Twister PRNG for high-quality normal variates.",
+      "Early-exit branch logic terminates knocked-out paths on barrier breach, cutting CPU cycles by ~30%; paths export to CSV for downstream volatility-surface analysis.",
+    ],
+    highlights: [
+      "100,000 GBM paths in under 1.8 seconds",
+      "~30% fewer CPU cycles via early-exit on barrier breach",
+      "CSV export for volatility-surface analysis",
+    ],
+    year: "2026",
+    role: "Solo build",
+    figure: "paths",
+    track: "quant",
+    tier: 3,
+    result:
+      "Paths that breach the barrier are abandoned the moment they breach it, not at expiry.",
+    stack: ["C++", "Python", "Pandas", "Matplotlib"],
+    metrics: [
+      { value: "100k", label: "GBM paths" },
+      { value: "<1.8s", label: "runtime" },
+      { value: "~30%", label: "CPU cycles saved by early exit" },
+    ],
+    github: "https://github.com/agarwaladarshcoding-maker/Monte-Carlo-Project-Simulator",
+    featured: false,
+  },
+  {
+    slug: "pca-factor-model",
+    index: "07",
+    domain: "Quant",
+    title: "PCA Factor Model",
+    tagline: "Principal components from scratch with SVD",
+    blurb:
+      "A from-scratch PCA factor model using SVD in NumPy — no ML libraries — preserving 95%+ of variance across multi-asset returns.",
+    description: [
+      "Built Principal Component Analysis from scratch using Singular Value Decomposition in NumPy with no ML libraries, applied to multi-asset financial return data.",
+      "The model preserves over 95% of explained variance, surfacing dominant market-factor loadings and cumulative-variance plots.",
+    ],
+    highlights: [
+      "PCA via raw SVD in NumPy, no ML libraries",
+      "Preserves 95%+ of explained variance",
+      "Visualises dominant market-factor loadings",
+    ],
+    year: "2025",
+    role: "Solo build",
+    figure: "variance",
+    track: "quant",
+    tier: 3,
+    result:
+      "No sklearn. The decomposition is the SVD, written out, so the maths is inspectable.",
+    stack: ["Python", "NumPy", "Pandas", "Matplotlib"],
+    metrics: [
+      { value: "95%+", label: "variance retained" },
+      { value: "0", label: "ML libraries used" },
+    ],
+    github:
+      "https://github.com/agarwaladarshcoding-maker/Project-Section/tree/main/Quant-Finance-Project/portfolio-manger-v2",
+    featured: false,
   },
 ];
 
@@ -607,14 +628,17 @@ export const profileDoc = [
   "## Project: Evidence-Aware Medical RAG (AI/ML)",
   "A production-grade medical RAG pipeline doing both dense and vectorless retrieval, then verifying every generated claim against its sources with an NLI-based hallucination detector and LoRA fine-tuning. GitHub: https://github.com/agarwaladarshcoding-maker",
   "",
-  "## Project: Mean-Reverting Pairs Trading (Quant)",
-  "A full statistical-arbitrage pipeline on GOOGL/MSFT - cointegration testing, rolling hedge ratios, and z-score signals over three years of real market data. GitHub: https://github.com/agarwaladarshcoding-maker",
+  "## Project: amber Copilot (Agentic AI)",
+  "A tool-calling booking agent for amberstudent.com that grounds every reply in live data from five API endpoints with citation tracking, so it cannot invent a property or a price. Four-layer conversational memory keeps multi-turn booking coherent. GitHub: https://github.com/agarwaladarshcoding-maker",
+  "",
+  "## Project: AgentWatch (Agentic AI)",
+  "A macOS monitor that intercepts CLI AI tools in real time and classifies their activity with a custom ML model at about 99% accuracy. GitHub: https://github.com/agarwaladarshcoding-maker",
   "",
   "## Project: HFT Order Matching Engine (Systems)",
   "A low-latency limit order book in modern C++ with price-time priority matching, O(1) lookups, and a cache-optimised memory layout. GitHub: https://github.com/agarwaladarshcoding-maker",
   "",
-  "## Project: AgentWatch (AI/ML)",
-  "A macOS monitor that intercepts CLI AI tools in real time and classifies their activity with a custom ML model at about 99% accuracy. GitHub: https://github.com/agarwaladarshcoding-maker",
+  "## Project: Mean-Reverting Pairs Trading (Quant)",
+  "A full statistical-arbitrage pipeline on GOOGL/MSFT - cointegration testing, rolling hedge ratios, and z-score signals over three years of real market data. GitHub: https://github.com/agarwaladarshcoding-maker",
   "",
   "## Project: Monte Carlo Option Pricer (Quant)",
   "Prices down-and-out barrier options over 100k simulated geometric-Brownian-motion paths in under 1.8s, with early-exit optimisation. GitHub: https://github.com/agarwaladarshcoding-maker",
