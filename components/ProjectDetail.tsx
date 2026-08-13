@@ -1,12 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { projects } from "@/lib/data";
 import Figure from "./Figures";
 
 export default function ProjectDetail({ slug }: { slug: string }) {
-  const { content } = useContent();
-  const projects = content.projects;
   const idx = projects.findIndex((p) => p.slug === slug);
   const project = idx >= 0 ? projects[idx] : undefined;
 

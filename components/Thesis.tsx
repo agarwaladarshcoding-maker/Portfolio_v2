@@ -9,11 +9,9 @@
 // same move the medical RAG makes on its own answers, applied here.
 
 import { useState } from "react";
-import { useContent } from "@/lib/content";
+import { thesis, evidence, site } from "@/lib/data";
 
 export default function Thesis() {
-  const { content } = useContent();
-  const { thesis, evidence, site } = content;
   const [active, setActive] = useState<string | null>(null);
 
   const indexOf = (ref: string) => evidence.findIndex((e) => e.id === ref) + 1;

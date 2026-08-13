@@ -14,17 +14,44 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useContent } from "@/lib/content";
-import { buildCorpus, retrieve, type Chunk } from "@/lib/rag";
+import {
+  site,
+  thesis,
+  evidence,
+  facts,
+  about,
+  projects,
+  experience,
+  skills,
+  achievements,
+  now,
+  chatbot,
+  profileDoc,
+} from "@/lib/data";
+import { buildCorpus, retrieve, type Chunk, type SiteContent } from "@/lib/rag";
 
 type Msg = { from: "user" | "bot"; text: string; via?: string; sources?: string[] };
 
 const TOP_K = 5;
 
-export default function ChatDock() {
-  const { content } = useContent();
-  const { chatbot, site } = content;
+// buildCorpus() takes the full site-content shape — assembled directly from
+// data.ts now that the localStorage-backed content layer is gone.
+const content: SiteContent = {
+  site,
+  thesis,
+  evidence,
+  facts,
+  about,
+  projects,
+  experience,
+  skills,
+  achievements,
+  now,
+  chatbot,
+  profileDoc,
+};
 
+export default function ChatDock() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([{ from: "bot", text: chatbot.intro }]);
   const [value, setValue] = useState("");

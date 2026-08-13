@@ -1,5 +1,3 @@
-"use client";
-
 // /now — what I'm doing at the moment.
 //
 // Same rule as the rest of the site: where a line can be checked, it links to
@@ -7,12 +5,9 @@
 // with a stale date is worse than no /now page at all.
 
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { now } from "@/lib/data";
 
 export default function NowPage() {
-  const { content } = useContent();
-  const now = content.now;
-
   return (
     <main className="mx-auto max-w-shell px-[var(--shell-x)] pb-24 pt-32">
       <Link href="/" className="font-mono text-micro uppercase text-bone-3 hover:text-amber">

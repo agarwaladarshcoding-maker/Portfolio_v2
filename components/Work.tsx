@@ -8,15 +8,14 @@
 // genuinely figures and the numbering is how the prose refers to them.
 
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { projects } from "@/lib/data";
 import Figure from "./Figures";
 
 export default function Work() {
-  const { content } = useContent();
   // AI/ML leads. The quant work follows as a named second track rather than
   // competing with it for the same slot.
-  const featured = content.projects.filter((p) => p.featured);
-  const secondTrack = content.projects.filter((p) => !p.featured);
+  const featured = projects.filter((p) => p.featured);
+  const secondTrack = projects.filter((p) => !p.featured);
 
   return (
     <section id="work" className="border-b border-rule px-[var(--shell-x)] py-20 sm:py-28">
@@ -33,7 +32,7 @@ export default function Work() {
             href="/work"
             className="font-mono text-label uppercase text-amber underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
           >
-            All {content.projects.length} projects ↗
+            All {projects.length} projects ↗
           </Link>
         </header>
 

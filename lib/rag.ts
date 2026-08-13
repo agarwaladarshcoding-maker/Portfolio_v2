@@ -10,7 +10,38 @@
 // and folded into the same pool. retrieve() returns the top-k chunks, which the
 // API route then hands to the LLM as grounding context.
 
-import type { SiteContent } from "./content";
+// SiteContent used to live in the now-deleted lib/content.tsx (a
+// localStorage-backed override layer with no writers left — see
+// lib/content.tsx's removal). It is redefined here, sourced straight from
+// lib/data.ts, since buildCorpus's shape is otherwise unchanged.
+import type {
+  site,
+  thesis,
+  evidence,
+  facts,
+  about,
+  projects,
+  experience,
+  skills,
+  achievements,
+  now,
+  chatbot,
+} from "./data";
+
+export type SiteContent = {
+  site: typeof site;
+  thesis: typeof thesis;
+  evidence: typeof evidence;
+  facts: typeof facts;
+  about: typeof about;
+  projects: typeof projects;
+  experience: typeof experience;
+  skills: typeof skills;
+  achievements: typeof achievements;
+  now: typeof now;
+  chatbot: typeof chatbot;
+  profileDoc: string;
+};
 
 export type Chunk = { id: string; title: string; text: string };
 

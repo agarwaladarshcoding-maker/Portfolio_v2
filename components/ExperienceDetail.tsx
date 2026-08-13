@@ -1,11 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { experience } from "@/lib/data";
 
 export default function ExperienceDetail({ slug }: { slug: string }) {
-  const { content } = useContent();
-  const item = content.experience.find((e) => e.slug === slug);
+  const item = experience.find((e) => e.slug === slug);
 
   if (!item) {
     return (

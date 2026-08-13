@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { site } from "@/lib/data";
 
 const sections = [
   { id: "work", label: "Work" },
@@ -16,8 +16,6 @@ const sections = [
 ];
 
 export default function Masthead() {
-  const { content } = useContent();
-  const { site } = content;
   const [here, setHere] = useState<string | null>(null);
   const [condensed, setCondensed] = useState(false);
 

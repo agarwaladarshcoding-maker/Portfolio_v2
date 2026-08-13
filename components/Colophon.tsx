@@ -6,11 +6,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { site } from "@/lib/data";
 
 export default function Colophon() {
-  const { content } = useContent();
-  const { site } = content;
   // Empty until mount — the server has no client timezone, and rendering a
   // placeholder here is a hydration-mismatch source.
   const [clock, setClock] = useState("");

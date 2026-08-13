@@ -1,11 +1,6 @@
-"use client";
-
-import { useContent } from "@/lib/content";
+import { site } from "@/lib/data";
 
 export default function Contact() {
-  const { content } = useContent();
-  const { site } = content;
-
   return (
     <section id="contact" className="border-b border-rule px-[var(--shell-x)] py-20 sm:py-28">
       <div className="mx-auto max-w-shell">

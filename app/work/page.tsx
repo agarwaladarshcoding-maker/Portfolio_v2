@@ -1,12 +1,7 @@
-"use client";
-
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { projects } from "@/lib/data";
 
 export default function WorkPage() {
-  const { content } = useContent();
-  const projects = content.projects;
-
   return (
     <main className="mx-auto max-w-shell px-[var(--shell-x)] pb-24 pt-32">
       <Link href="/" className="font-mono text-micro uppercase text-bone-3 hover:text-amber">

@@ -1,17 +1,12 @@
-"use client";
-
 // The record: achievements and experience in one table, with a column that
 // says how each line can be checked. A credential nobody can verify is still
 // worth stating — it just should not be dressed up as the same kind of fact as
 // a repository you can open.
 
 import Link from "next/link";
-import { useContent } from "@/lib/content";
+import { achievements, experience, skills } from "@/lib/data";
 
 export default function Record() {
-  const { content } = useContent();
-  const { achievements, experience, skills } = content;
-
   return (
     <section id="record" className="border-b border-rule px-[var(--shell-x)] py-20 sm:py-28">
       <div className="mx-auto max-w-shell">
