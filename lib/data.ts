@@ -28,73 +28,51 @@ export const site = {
 // its sources, the pairs strategy tests its spread for stationarity before
 // trading it, the PCA is written from scratch to check what the library says.
 //
-// `lede` is prose split into segments. A segment with a `ref` is a claim, and
-// it points at an entry in `evidence` below. Nothing on this page asserts
-// something the reader cannot go and check.
-
-export type LedeSegment = { text: string; ref?: string };
+// The backing used to be a paragraph of annotated prose pointing at a rail of
+// sources underneath it. It is a stat strip now: four numbers, each one an
+// anchor straight to the place a reader can go check it — a profile, a repo,
+// a section of this page. The proof is a link, not a footnote.
 
 export const thesis = {
   headline: ["Systems that", "check their", "own work."],
-  lede: [
-    { text: "I'm Adarsh. I build " },
-    { text: "retrieval and agent systems that grade their own answers", ref: "rag" },
-    { text: " — RAG with claim-level hallucination detection, agents that cannot cite a source they never retrieved. I read for a " },
-    { text: "B.Tech in CS at IIIT Pune", ref: "iiit" },
-    { text: ", and the same discipline runs through my " },
-    { text: "quantitative work", ref: "quant" },
-    { text: ", where an untested model is just an opinion. When I want to know how something works I " },
-    { text: "write it from scratch", ref: "scratch" },
-    { text: "." },
-  ] as LedeSegment[],
+  lede: "I build retrieval and agent systems that verify their own output. I read CS at IIIT Pune, and work quant as a second track.",
+  tracks: ["Competitive programming", "AI/ML & agents", "Quant"],
 };
 
-// Two kinds of evidence, and the page is honest about which is which.
-//   source — you can open it and read the code.
-//   record — a credential I am reporting; take my word or ask for the marksheet.
-export type Evidence = {
-  id: string;
-  kind: "source" | "record";
-  claim: string;
-  detail: string;
-  href?: string;
-  hrefLabel?: string;
+// Each stat is a number a reader can go verify. `external` marks a link that
+// leaves the site (opens in a new tab); everything else is an in-page anchor
+// to the section of this page that backs the number up.
+export type Stat = {
+  value: string;
+  label: string;
+  href: string;
+  external: boolean;
 };
 
-export const evidence: Evidence[] = [
+export const evidence: Stat[] = [
   {
-    id: "iiit",
-    kind: "record",
-    claim: "B.Tech CSE, 2025–29",
-    detail:
-      "Indian Institute of Information Technology, Pune. CGPA 9.38/10 — top 5% of the cohort. JEE Main 2025: AIR 17,517, 97th percentile in Mathematics.",
+    value: "385",
+    label: "problems solved",
+    href: "https://codeforces.com/profile/AdarshAg",
+    external: true,
   },
   {
-    id: "rag",
-    kind: "source",
-    claim: "Medical RAG, trust-aware",
-    detail:
-      "Splits its own answer into atomic claims and labels each one SUPPORTED, WEAK, UNSUPPORTED or CONTRADICTED against the retrieved passages, using an NLI model. Hallucinations become measurable instead of invisible. Open the demo and it will show you the verdict for every sentence it writes.",
-    href: "https://medical-rag-demo.vercel.app",
-    hrefLabel: "Try the live demo",
+    value: "9.38",
+    label: "CGPA at IIIT Pune",
+    href: "#record",
+    external: false,
   },
   {
-    id: "quant",
-    kind: "source",
-    claim: "Quant: stationarity-tested",
-    detail:
-      "A spread is only tradeable if it mean-reverts. Rolling OLS gives the hedge ratio; an Augmented Dickey–Fuller test decides whether the residual is stationary enough to act on. The test can say no.",
-    href: "https://github.com/agarwaladarshcoding-maker/Project-Section/tree/main/Quant-Finance-Project/Mean%20Reverting%20Pairs",
-    hrefLabel: "Mean Reverting Pairs",
+    value: "96",
+    label: "tests on the medical RAG",
+    href: "https://github.com/agarwaladarshcoding-maker/Advanced-Medical-Based-RAG-System",
+    external: true,
   },
   {
-    id: "scratch",
-    kind: "source",
-    claim: "Written from scratch",
-    detail:
-      "PCA implemented from the SVD up in NumPy with no ML library, a limit order book in C++17, and linear regression rebuilt to check the textbook. The point is to find out where the abstraction leaks.",
-    href: "https://github.com/agarwaladarshcoding-maker/High-Frequency-Order-Book",
-    hrefLabel: "High-Frequency-Order-Book",
+    value: "7",
+    label: "projects",
+    href: "#work",
+    external: false,
   },
 ];
 

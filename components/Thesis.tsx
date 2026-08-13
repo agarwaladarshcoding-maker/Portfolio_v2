@@ -1,21 +1,17 @@
-"use client";
-
 // The hero, and the argument the whole page rests on.
 //
-// A portfolio is a page of claims about a person, and normally none of them can
-// be checked. This one annotates its own prose: every load-bearing phrase
-// carries a marker that points to a source in the rail beneath it. Hovering a
-// claim raises its evidence; hovering the evidence raises the claim. It is the
-// same move the medical RAG makes on its own answers, applied here.
+// The claim used to be a paragraph of annotated prose pointing down at a rail
+// of sources — the same move the medical RAG makes on its own answers,
+// applied to a page. That move survives, but as a strip of numbers instead of
+// footnotes: a short lede states the claim, three chips name the tracks, and
+// every stat below is an anchor straight to where a reader can go check it.
+// The portrait sits beside the claim as itself — the person the numbers
+// describe, not a footnote either.
 
-import { useState } from "react";
+import Portrait from "./Portrait";
 import { thesis, evidence, site } from "@/lib/data";
 
 export default function Thesis() {
-  const [active, setActive] = useState<string | null>(null);
-
-  const indexOf = (ref: string) => evidence.findIndex((e) => e.id === ref) + 1;
-
   return (
     <section id="main" className="border-b border-rule px-[var(--shell-x)] pb-14 pt-28 sm:pb-20 sm:pt-32">
       <div className="mx-auto max-w-shell">
@@ -24,7 +20,7 @@ export default function Thesis() {
           {site.role} · {site.location}
         </p>
 
-        {/* Sized so the claim and its evidence share the first screen — the
+        {/* Sized so the claim and the portrait share the first screen — the
             pairing is the point, and a bigger headline buries it. */}
         <h1 className="display display-tight text-[clamp(2.75rem,8vw,6.5rem)]">
           {thesis.headline.map((line, i) => (
@@ -41,74 +37,52 @@ export default function Thesis() {
           ))}
         </h1>
 
-        <div className="mt-12 grid items-start gap-x-16 gap-y-10 lg:grid-cols-[1.15fr_1fr]">
-          {/* The claim. */}
-          <p className="max-w-prose text-[clamp(1.05rem,1.5vw,1.3rem)] leading-[1.65] text-bone-2">
-            {/* Anchors, not buttons: a footnote points at its source, and an
-                inline anchor wraps across lines where a button cannot. */}
-            {thesis.lede.map((seg, i) =>
-              seg.ref ? (
-                <a
-                  key={i}
-                  href={`#ev-${seg.ref}`}
-                  className="claim text-bone [box-decoration-break:clone]"
-                  data-active={active === seg.ref}
-                  onMouseEnter={() => setActive(seg.ref ?? null)}
-                  onMouseLeave={() => setActive(null)}
-                  onFocus={() => setActive(seg.ref ?? null)}
-                  onBlur={() => setActive(null)}
-                >
-                  {seg.text}
-                  <span className="marker">{indexOf(seg.ref)}</span>
-                </a>
-              ) : (
-                <span key={i}>{seg.text}</span>
-              ),
-            )}
-          </p>
+        <div className="mt-12 grid items-start gap-x-16 gap-y-10 lg:grid-cols-[1fr_300px]">
+          {/* Above the type on mobile, beside it on lg — fixed to a narrow
+              column at every breakpoint (never full-bleed) and the aspect
+              ratio matches the source image, so the space is reserved before
+              it loads and nothing shifts. */}
+          <Portrait
+            variant="hero"
+            priority
+            className="order-first mx-auto aspect-[639/853] w-full max-w-[220px] sm:max-w-[280px] lg:order-last lg:mx-0 lg:w-[300px] lg:max-w-none"
+          />
 
-          {/* The evidence. */}
-          <div>
-            <p className="label mb-4 border-b border-rule pb-3">Sources</p>
-            <ol className="space-y-px">
-              {evidence.map((e, i) => {
-                const on = active === e.id;
-                return (
-                  <li
-                    key={e.id}
-                    id={`ev-${e.id}`}
-                    onMouseEnter={() => setActive(e.id)}
-                    onMouseLeave={() => setActive(null)}
-                    className={`border-l-2 py-3 pl-4 transition-colors duration-200 ${
-                      on ? "border-amber bg-amber-wash/60" : "border-transparent"
-                    }`}
+          <div className="order-last lg:order-first">
+            <p className="max-w-prose text-[clamp(1.05rem,1.5vw,1.3rem)] leading-[1.65] text-bone-2">
+              {thesis.lede}
+            </p>
+
+            {/* The three identities the rest of the site backs up. Labels,
+                not links — the site itself is the evidence for these. */}
+            <ul className="mt-6 flex flex-wrap gap-3">
+              {thesis.tracks.map((t) => (
+                <li key={t} className="label border border-rule px-3 py-1.5">
+                  {t}
+                </li>
+              ))}
+            </ul>
+
+            {/* The stat strip. Every number is an anchor to where it can be
+                checked — a profile, a repo, or a section of this page. */}
+            <ul className="mt-10 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-rule pt-8 sm:grid-cols-4">
+              {evidence.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    {...(s.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="group block"
                   >
-                    <div className="flex items-baseline gap-3">
-                      <span className="font-mono text-[11px] text-amber">{i + 1}</span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                          <span className="text-[15px] font-medium text-bone">{e.claim}</span>
-                          <span className="font-mono text-micro uppercase text-bone-3">
-                            {e.kind === "source" ? "code" : "self-reported"}
-                          </span>
-                        </div>
-                        <p className="mt-1.5 text-[14px] leading-relaxed text-bone-2">{e.detail}</p>
-                        {e.href && (
-                          <a
-                            href={e.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-2 inline-flex items-center gap-1.5 font-mono text-[11px] text-amber underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
-                          >
-                            {e.hrefLabel} <span aria-hidden>↗</span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+                    <span className="display block text-[1.75rem] leading-none text-bone transition-colors group-hover:text-amber">
+                      {s.value}
+                    </span>
+                    <span className="label mt-2 block leading-[1.5] text-bone-3 transition-colors group-hover:text-amber">
+                      {s.label}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
